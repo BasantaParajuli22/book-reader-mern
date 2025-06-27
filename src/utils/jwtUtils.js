@@ -6,7 +6,6 @@ const jwtSecretKey =process.env.JWT_SECRET_KEY;
 
 export async function generateToken(id, email, role) {
     
-    
     const token = jsonwebtoken.sign(
         {id: id, email: email, role: role}, //id email and role -> payload as object
         jwtSecretKey,           //secretOrPrivateKey

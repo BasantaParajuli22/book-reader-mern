@@ -1,4 +1,4 @@
-
+//@ts-check
 import express from 'express';
 import 'dotenv/config'
 import { connectToMongo } from "./src/config/mongooseConfig.js";
@@ -6,6 +6,7 @@ import { checkAndSeedDatabase } from './src/utils/seedUtils.js';
 import bookRouter from './src/routes/bookRoutes.js';
 import chapterRouter from './src/routes/chapterRoutes.js';
 import authRouter from './src/routes/authRoutes.js';
+import checkAndInitializeAdmin from './src/utils/adminInitializer.js';
 
 
 const PORT = process.env.PORT;
@@ -24,11 +25,12 @@ async function startServer() {
         await connectToMongo();
         console.log('✅ Connected to MongoDB'); 
         // Run once to populate your database
-        checkAndSeedDatabase();
+        await checkAndSeedDatabase();
+        await checkAndInitializeAdmin();
 
         app.listen(PORT, () => {
             console.log(` Server running on port ${PORT}`);
-            console.log(` API available at: http://localhost:${PORT}/api/books`);
+            console.log(` API available at: http://localhost:${PORT}/api`);
         });
         
     } catch (error) {

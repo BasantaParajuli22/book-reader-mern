@@ -6,10 +6,15 @@ import * as bookService from '../services/bookService.js';
 
 export async function createBook(req,res){
   try {
-    const bookData = req.body;
-    const savedBook = await bookService.createBook(bookData);
+    const { title, author, description, genre, status, coverImage } = req.body;
+    const userId = req.user.id;//from jwt token after middleware checks we get 
+
+    if (!title || !author ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const savedBook = await bookService.createBook(userId, title, author, description, genre, status, coverImage);
     if (!savedBook) {
-      return res.status(404).json({ message: "Creation book error" });
+      return res.status(500).json({ message: "Failed to create book" });
     }
     res.status(201).json(savedBook);   
   } catch (error) {
@@ -19,13 +24,15 @@ export async function createBook(req,res){
 
 export async function updateBook(req,res){
   try {
-    const { id } = req.params;
-    const bookData = req.body;
-    const updatedBook = await bookService.updateBook(id, bookData);
+    const { bookId } = req.params;
+    const { title, author, description, genre, status, coverImage } = req.body;
+    const userId = req.user.id;
+
+    const updatedBook = await bookService.updateBook(userId,bookId, title, author, description, genre, status, coverImage);
     if (!updatedBook) {
       return res.status(404).json({ message: "Update of book error" });
     }
-    res.status(201).json(updatedBook);   
+    res.status(200).json(updatedBook);   
   } catch (error) {
     res.status(500).json({ error: error.message }); //if internal error caught
   }

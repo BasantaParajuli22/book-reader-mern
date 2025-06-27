@@ -2,7 +2,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
-export async function registerUser(username, email, password) {
+export async function registerUser(username, email, password, role) {
 
     if(!email || !password){
         throw new Error('Email and password are required ');
@@ -13,7 +13,7 @@ export async function registerUser(username, email, password) {
     }
 
     const hashedpassword = await bcrypt.hash(password,10);
-    const newUser = new User({username, email, password: hashedpassword});
+    const newUser = new User({username, email, password: hashedpassword, role});
     const savedUser = await newUser.save();
     return savedUser;
 }

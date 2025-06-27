@@ -1,0 +1,29 @@
+If there is ip or dns issue while connecting to mongodb atals 
+
+ipconfig /all
+ This ipconfig /all output provides all the information we need.
+
+You are currently connected via "Wireless LAN adapter Wi-Fi", and your relevant details are:
+
+IPv4 Address: 192.168.1.5
+Subnet Mask: 255.255.255.0 (which means a Subnet prefix length of 24)
+Default Gateway: 192.168.1.1
+Your current DNS Servers: 192.168.1.1 (this is what we're changing)
+Now, go back to that "Edit IP settings" window in your Windows Settings that you previously showed me.
+
+Here's exactly what to type into each field:
+
+Make sure the "IPv4" dropdown is set to "Manual."
+
+Ensure the "IPv4" toggle switch is "On."
+In the "IP address" field, type: 192.168.1.5
+In the "Subnet prefix length" field, type: 24
+In the "Gateway" field, type: 192.168.1.1
+In the "Preferred DNS" field, type: 8.8.8.8
+In the "Alternate DNS" field, type: 8.8.4.4
+Make sure "IPv6" is set to "Off."
+Click "Save."
+
+VERY IMPORTANT FINAL STEP:
+RESTART YOUR ENTIRE COMPUTER. 
+This is absolutely crucial for the new DNS settings to take full effect across your system.

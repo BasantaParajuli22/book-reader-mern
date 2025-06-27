@@ -6,8 +6,12 @@ import * as chapterService from '../services/chapterService.js';
 export async function createChapter(req, res) {
   try {
     const { bookId } = req.params;
-    const chapterData = req.body;
-    const savedChapter = await chapterService.createChapter(bookId, chapterData);
+    const { title, chapterNumber, content, order } = req.body;
+
+    if( !content || !order || !chapterNumber){
+       return res.status(400).json({ message: "Missing required fields" });
+    }
+    const savedChapter = await chapterService.createChapter(bookId, title, chapterNumber, content, order);
     res.status(201).json(savedChapter);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -18,8 +22,12 @@ export async function createChapter(req, res) {
 export async function updateChapter(req, res) {
   try {
     const { bookId, chapterId } = req.params;
-    const updates = req.body;
-    const updated = await chapterService.updateChapter(bookId, chapterId, updates);
+    const { title, chapterNumber, content, order } = req.body;
+ 
+    if( !content || !order || !chapterNumber){
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const updated = await chapterService.updateChapter(bookId, chapterId, title, chapterNumber, content, order);
     if (!updated) return res.status(404).json({ message: 'Chapter not found or book mismatch' });
     res.status(200).json(updated);
   } catch (error) {
@@ -117,7 +125,7 @@ export async function getChaptersWithFilters(req, res) {
       page,
       limit,
       sortBy,
-      order
+      order //-> asc desc
     } = req.query;
 
     const query = {};

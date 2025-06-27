@@ -10,7 +10,7 @@ export async function checkAndSeedDatabase() {
       console.log("No books found in database. Seeding now...");
       await seedDatabase();
     } else {
-      console.log("📚 Database already has books. Skipping seed.");
+      console.log(" Database already has books. Skipping seed.");
     }
   } catch (error) {
     console.error("Error checking database:", error);

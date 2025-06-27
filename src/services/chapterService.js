@@ -1,17 +1,17 @@
 import Chapter from "../models/Chapter.js";
 
 //create new  chapter using bookId and data
-export async function createChapter(bookId, ChapterData){
-    const newChapter = new Chapter({ ...ChapterData, bookId });
+export async function createChapter(bookId, title, chapterNumber, content, order){
+    const newChapter = new Chapter({ bookId, title, chapterNumber, content, order });
     const savedChapter = await newChapter.save();
     return savedChapter;   
 }
 
 //update chapter using bookId chapterId and data
-export async function updateChapter(bookId, chapterId, updates) {
+export async function updateChapter(bookId, chapterId, title, chapterNumber, content, order) {
     const updatedChapter = await Chapter.findOneAndUpdate(
-        { _id: chapterId, bookId },
-        updates,
+        { _id: chapterId, bookId }, //obj
+        {title, chapterNumber, content, order}, //update data in obj
         {new: true}
     ); 
     return updatedChapter;

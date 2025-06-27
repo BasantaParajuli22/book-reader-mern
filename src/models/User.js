@@ -19,9 +19,18 @@ const userSchema =new mongoose.Schema({
     role:{
         type: String,
         required : true,
-        enum: ["amdin", "reader"],
+        enum: ["admin", "reader"],
         default: "reader",
-    }
+    },
+    //users can have multiple liked books and chapters
+    likedBooks:[{//[] -> array to store users liked Books
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+    }],
+    favouriteChapters:[{//[] -> array to store users favourite Chapters
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chapter",
+    }]
 
 }, {timestamps: true});
 

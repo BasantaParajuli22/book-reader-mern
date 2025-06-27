@@ -1,3 +1,4 @@
+//@ts-check
 import mongoose from 'mongoose';
 
 const bookSchema = new mongoose.Schema({//creating mongoose schema 
@@ -15,8 +16,8 @@ const bookSchema = new mongoose.Schema({//creating mongoose schema
     description: {
         type: String,
         required: false, // by default required is false 
-       trim: true,
-       maxLength: 200,
+        trim: true,
+        maxLength: 200,
     },
     genre:[     //this is array means 1 book can multiple genres
         {
@@ -36,7 +37,8 @@ const bookSchema = new mongoose.Schema({//creating mongoose schema
     }, 
     coverImage: {
         type: String, // URL to cover image 
-    }, 
+        default: "https://ocohjxbhun.ufs.sh/f/tusHOP3SRakyc8FLA65voD3SOBrVwQq1d6LJjy9GW8T5bnHF",//default image link 
+    },      
     readCount: {
         type: Number,
         default: 0,

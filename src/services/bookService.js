@@ -1,16 +1,19 @@
 import Book from "../models/Book.js";
 import Chapter from "../models/Chapter.js";
 
-export async function createBook(bookData){
-    const newBook = new Book(bookData); //creating new book Object and save 
+export async function createBook(userId, title, author, description, genre, status, coverImage){
+    const newBook = new Book({ title, author, description, genre, status, coverImage}); //creating new book Object and save 
     const savedBook = await newBook.save();
     return savedBook;   
 }
 
 
 //findByIdAndUpdate mongoose fn 
-export async function updateBook(bookId, updates) {
-    const updatedBook = await Book.findByIdAndUpdate(bookId, updates, {new : true}); 
+export async function updateBook(userId, bookId, title, author, description, genre, status, coverImage) {
+    const updatedBook = await Book.findByIdAndUpdate(
+        bookId, 
+        { title, author, description, genre, status, coverImage },
+        {new : true}); 
     return updatedBook;
 }
 
