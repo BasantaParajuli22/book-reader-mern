@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Chapter',
     },
-    parentCommentId: {//for threading -> like replying to comment 
+    parentCommentId: {//for threading -> like replying to comment //store comment id 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comment',
         default: null,

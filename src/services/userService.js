@@ -2,25 +2,27 @@
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 import Chapter from "../models/Chapter.js";
+import Book from "../models/Book.js";
 
-export async function changeUserRole(id, role) {
+export async function changeUserRole( id, role) {
     const allowedRoles = ['admin', 'reader'];
 
     if (!allowedRoles.includes(role)) {
-      throw new Error(`Invalid role needs to 'admin' or 'reader'`);
+      throw new Error(`Invalid role needs to  be'admin' or 'reader'`);
     }
     const user = await User.findByIdAndUpdate(
-      id,   //id of user 
-      { role }, //update to be made in object
+        id,         //id of user to be changed
+      { role },     //update to be made in object
       { new: true } //returns update docs instead of old(default)
     );
-    return user
+    return user;
 }
 
 export async function likeOrUnlikeBook(userId, bookId) {
   const user = await User.findById(userId);
-  if(!user){
-    throw new Error('User not found by likeOrUnlikeBook');
+  const book = await Book.findById(bookId);
+  if(!user || !book ){
+    throw new Error('User or Book not found by likeOrUnlikeBook');
   }
 
   const alreadyLiked =  user?.likedBooks.includes(bookId);
@@ -34,8 +36,9 @@ export async function likeOrUnlikeBook(userId, bookId) {
 
 export async function likeOrUnlikeChapter(userId, chapterId) {
   const user = await User.findById(userId);
-  if(!user){
-    throw new Error('User not found by likeOrUnlikeChapter');
+  const chapter = await Chapter.findById(userId);
+  if(!user || !chapter){
+    throw new Error('User or chapter not found by likeOrUnlikeChapter');
   }
 
   const alreadyLiked =  user?.favouriteChapters.includes(chapterId);
@@ -61,7 +64,7 @@ export async function likeOrUnlikeComment(userId, commentId) {
   }else{
     comment.likes.push(userId);  // add userId from comment likes
   } 
-  await user.save(); 
+  await comment.save(); 
   return comment;
 }
 
@@ -72,6 +75,18 @@ export async function addNewComment(userId, chapterId, parentCommentId, content)
     throw new Error('User or chapter not found by addNewComment');
   }
 
+  //if parentComment is null no need to check
+  //parentcomment if not null then parentcomment should be present in same chapter
+  if(parentCommentId != null){
+    const parentComment = await Comment.findById(parentCommentId);
+    if(!parentComment){
+      throw new Error('Parent Comment doesnot exists');
+    }
+    //compare chapterId value not their instances so//
+    if(parentComment.chapterId?.toString() !== chapterId.toString()){
+      throw new Error('Parent Comment doesnot exist on same chapter, cannot reply');
+    }
+  }
   const newComment = new Comment({
     content: content,
     userId: userId,
@@ -83,11 +98,17 @@ export async function addNewComment(userId, chapterId, parentCommentId, content)
   return newComment;
 }
 
+//check if same user comment
 export async function updateComment(userId, commentId, content) {
   const user = await User.findById(userId);
-  if(!user) {
-    throw new Error('User or chapter not found by updateComment');
+  const comment = await Comment.findById(commentId);
+  if(!user || !comment) {
+    throw new Error('User or comment not found by updateComment');
   }
+  if(comment.userId?.toString() != userId.toString()){
+    throw new Error('unauthorized: comment doesnot belong to user');
+  }
+
   const updatedComment = await Comment.findByIdAndUpdate(commentId, content, {new: true});
   if(!updatedComment){
     throw new Error('Comment not found by updateComment');
@@ -104,6 +125,9 @@ export async function deleteComment(userId, commentId) {
   const comment = await Comment.findById(commentId);
   if(!comment){
     throw new Error('Comment not found by deleteComment');
+  }
+  if(comment.userId?.toString() != userId.toString()){//dont need to check for child comments 
+    throw new Error('unauthorized: comment doesnot belong to user');
   }
   await deleteCommentAndReplies(commentId);
   return comment;

@@ -6,6 +6,7 @@ import { checkAndSeedDatabase } from './src/utils/seedUtils.js';
 import bookRouter from './src/routes/bookRoutes.js';
 import chapterRouter from './src/routes/chapterRoutes.js';
 import authRouter from './src/routes/authRoutes.js';
+import userRouter from './src/routes/userRoutes.js';
 import checkAndInitializeAdmin from './src/utils/adminInitializer.js';
 
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use( ('/api'), bookRouter);
 app.use( ('/api'), chapterRouter);
 app.use( ('/api'), authRouter);
+app.use( ('/api'), userRouter);
 
 async function startServer() {
     try {

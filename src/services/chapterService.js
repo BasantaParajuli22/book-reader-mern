@@ -29,6 +29,7 @@ export async function deleteChapter(bookId, chapterId) {
     return deletedChapter;
 }
 
+//total no of chapters by book 
 export async function countChaptersByBook(bookId) {
   return await Chapter.countDocuments({ bookId });
 }

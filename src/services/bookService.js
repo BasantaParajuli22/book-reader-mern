@@ -7,7 +7,6 @@ export async function createBook(userId, title, author, description, genre, stat
     return savedBook;   
 }
 
-
 //findByIdAndUpdate mongoose fn 
 export async function updateBook(userId, bookId, title, author, description, genre, status, coverImage) {
     const updatedBook = await Book.findByIdAndUpdate(
@@ -109,3 +108,4 @@ export async function findBooksWithFilters(
         .limit(limit);
     return result;
 }
+

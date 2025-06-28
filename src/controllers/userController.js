@@ -5,10 +5,21 @@ import * as userService from '../services/userService.js';
 //so changing the role 
 export async function changeUserRole(req, res) {
   try {
-    const { role } = req.body;
-    const userId = req.user.id;//getting userId from middleware which decodes jwt
+    const { role } = req.body;  
+    const { id } = req.params;
+    const userId = req.user.id; //getting userId from middleware which decodes jwt
     
-    const user = await userService.changeUserRole(userId, role); 
+    if(!id){
+      res.status(404).json({message: 'id cannot found'});
+    }
+    if(userId == id){
+      res.json({ message: 'You cannot change ur own role. change others only'});
+    }
+
+    const user = await userService.changeUserRole( id, role );
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    } 
     res.json({ message: 'Role updated', changedUser: user });
   } catch (error) {
      res.status(500).json({ error: error.message });
@@ -20,8 +31,8 @@ export async function likeOrUnlikeBook(req, res) {
     const { bookId } = req.params;//get from params
     const userId = req.user.id;
 
-    await userService.likeOrUnlikeBook(userId, bookId);
-    res.json( {message: 'success'} );
+    const user = await userService.likeOrUnlikeBook(userId, bookId);
+    res.json( {message: 'success', user: user} );
   } catch (error) {
      res.status(500).json({ error: error.message });
   }
@@ -32,8 +43,8 @@ export async function likeOrUnlikeChapter(req, res) {
     const { chapterId } = req.params;//get from params
     const userId = req.user.id;
 
-    await userService.likeOrUnlikeChapter(userId, chapterId);
-    res.json( {message: 'success'} );
+    const user = await userService.likeOrUnlikeChapter(userId, chapterId);
+    res.json( {message: 'success', user: user} );
   } catch (error) {
      res.status(500).json({ error: error.message });
   }
@@ -46,8 +57,8 @@ export async function likeOrUnlikeComment(req, res) {
     const { commentId } = req.params;//get from params
     const userId = req.user.id;
 
-    await userService.likeOrUnlikeComment(userId, commentId );
-    res.json( {message: 'success'} );
+    const comment = await userService.likeOrUnlikeComment(userId, commentId );
+    res.json( {message: 'success', comment: comment } );
   } catch (error) {
      res.status(500).json({ error: error.message });
   }
@@ -124,7 +135,7 @@ export async function readCommentsWithFilters(req, res) {
       sort,
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10
-    });
+    }); 
 
     const total = await userService.countComments(query);//count comments
 

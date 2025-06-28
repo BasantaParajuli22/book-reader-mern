@@ -26,10 +26,6 @@ const bookSchema = new mongoose.Schema({//creating mongoose schema
             default:"horror",
         }
     ],  
-    totalChapter:{
-        type: Number,
-        default: 0,
-    },
     status:  {
         type: String,
         enum: ["completed", "ongoing", "drafted" ],
